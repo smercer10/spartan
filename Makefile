@@ -1,14 +1,15 @@
 SRC_DIR := src
 BIN_DIR := bin
 
-ENTRY := main
+ENTRY_NAME := spartan
 
-SRC := $(SRC_DIR)/$(ENTRY).asm
-BIN := $(BIN_DIR)/$(ENTRY)
+ENTRY := $(SRC_DIR)/$(ENTRY_NAME).asm
+INCLUDES := $(wildcard $(SRC_DIR)/*.inc)
+BIN := $(BIN_DIR)/$(ENTRY_NAME)
 
 CC := fasm
 
-$(BIN): $(SRC) | $(BIN_DIR)
+$(BIN): $(ENTRY) $(INCLUDES) | $(BIN_DIR)
 	@ $(CC) $< $@
 
 run: $(BIN)
