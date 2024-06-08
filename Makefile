@@ -18,7 +18,14 @@ run: $(BIN)
 $(BIN_DIR):
 	@ mkdir $@
 
+constants: constants.c | $(BIN_DIR)
+	@ gcc $< -o $(BIN_DIR)/$@
+	@ ./$(BIN_DIR)/$@
+
+strace: $(BIN)
+	@ strace ./$<
+
 clean:
 	@ rm -rf $(BIN_DIR)
 
-.PHONY: run clean
+.PHONY: run constants strace clean
