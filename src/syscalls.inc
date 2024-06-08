@@ -1,6 +1,6 @@
-SYS_WRITE = 1
-SYS_SOCKET = 41
-SYS_EXIT = 60
+SYS_WRITE equ 1
+SYS_SOCKET equ 41
+SYS_EXIT equ 60
 
 macro write fd, buf, count
 {

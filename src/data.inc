@@ -1,4 +1,7 @@
-NEWLINE = 10
+INFO equ "INFO: "
+ERR equ "ERROR: "
+
+NL equ 10
 
 struc db [data]
 {
@@ -7,5 +10,10 @@ struc db [data]
         .size = $ - .
 }
 
-segment readable
-        start_msg db "Starting web server!", NEWLINE
+segment readable writeable
+        start_msg db INFO, "Starting web server!", NL
+        sock_create_msg db INFO, "Creating socket...", NL
+        done_msg db INFO, "Done.", NL
+        err_msg db ERR, "Something went wrong.", NL
+
+        sockfd dq 0
