@@ -3,6 +3,14 @@ ERR equ "ERROR: "
 
 NL equ 10
 
+struc sockaddr_in
+{
+        .sin_family dw 0
+        .sin_port dw 0
+        .sin_addr dd 0
+        .sin_zero dq 0
+}
+
 struc db [data]
 {
         common
@@ -10,24 +18,21 @@ struc db [data]
         .size = $ - .
 }
 
-struc sockaddr_in
-{
-        .sin_family dw 0
-        .sin_port dw 0
-        .sin_addr dd 0
-        .sin_zero dq 0
-        .size = $ - .sin_family
-}
-
 segment readable writeable
-        sockfd dq 0
+        sockfd dq -1
+        connfd dq -1
+
         svraddr sockaddr_in
+        svraddrlen = $ - svraddr ; Readable value
+        
         cltaddr sockaddr_in
+        cltaddrlen dd 0 ; Writeable address
 
-        init_msg db INFO, "Starting server!", NL
-        ok_msg db INFO, "Everything was ok!", NL
-        err_msg db ERR, "Something went wrong!", NL
+        init_msg db INFO, "Starting server", NL
+        ok_msg db INFO, "Everything was ok", NL
+        err_msg db ERR, "Something went wrong", NL
 
-        sock_create_msg db INFO, "Creating socket...", NL
-        sock_bind_msg db INFO, "Binding socket...", NL
-        sock_listen_msg db INFO, "Listening for connections...", NL
+        socket_msg db INFO, "Creating socket", NL
+        bind_msg db INFO, "Binding socket", NL
+        listen_msg db INFO, "Marking socket as passive", NL
+        accept_msg db INFO, "Waiting for connection", NL

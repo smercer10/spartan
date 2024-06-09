@@ -1,6 +1,7 @@
 SYS_WRITE equ 1
 SYS_CLOSE equ 3
 SYS_SOCKET equ 41
+SYS_ACCEPT equ 43
 SYS_BIND equ 49
 SYS_LISTEN equ 50
 SYS_EXIT equ 60
@@ -29,9 +30,14 @@ macro socket domain*, type*, protocol*
         vararg_syscall SYS_SOCKET, domain, type, protocol
 }
 
-macro bind sockfd*, sockaddr*, sockaddr_size*
+macro accept sockfd*, addr*, addrlen*
 {
-        vararg_syscall SYS_BIND, sockfd, sockaddr, sockaddr_size
+        vararg_syscall SYS_ACCEPT, sockfd, addr, addrlen
+}
+
+macro bind sockfd*, addr*, addrlen*
+{
+        vararg_syscall SYS_BIND, sockfd, addr, addrlen
 }
 
 macro listen sockfd*, backlog*
@@ -39,7 +45,7 @@ macro listen sockfd*, backlog*
         vararg_syscall SYS_LISTEN, sockfd, backlog
 }
 
-macro exit code*
+macro exit status*
 {
-        vararg_syscall SYS_EXIT, code
+        vararg_syscall SYS_EXIT, status
 }

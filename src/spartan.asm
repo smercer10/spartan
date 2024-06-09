@@ -12,7 +12,7 @@ IPPROTO_IP equ 0
 INADDR_ANY equ 0
 
 ; These can be changed
-PORT equ 10506
+PORT equ 14597 ; Little endian representation (actually 1337)
 MAX_CONN equ 10
 
 include 'syscalls.inc'
@@ -23,36 +23,45 @@ main:
         write STDOUT, init_msg, init_msg.size
 
         ; Create socket
-        write STDOUT, sock_create_msg, sock_create_msg.size
+        write STDOUT, socket_msg, socket_msg.size
         socket AF_INET, SOCK_STREAM, IPPROTO_IP
         cmp rax, 0
         jl error
         mov qword [sockfd], rax
 
-        ; Bind socket
-        write STDOUT, sock_bind_msg, sock_bind_msg.size
+        ; Bind address to socket
+        write STDOUT, bind_msg, bind_msg.size
         mov word [svraddr.sin_family], AF_INET
         mov word [svraddr.sin_port], PORT
         mov dword [svraddr.sin_addr], INADDR_ANY
-        bind [sockfd], svraddr, svraddr.size
+        bind [sockfd], svraddr, svraddrlen
         cmp rax, 0
         jl error
 
-        ; Listen for connections
-        write STDOUT, sock_listen_msg, sock_listen_msg.size
+        ; Mark socket as passive
+        write STDOUT, listen_msg, listen_msg.size
         listen [sockfd], MAX_CONN
         cmp rax, 0
         jl error
-        
+
+        ; Wait for client connection
+        write STDOUT, accept_msg, accept_msg.size
+        accept [sockfd], cltaddr, cltaddrlen
+        cmp rax, 0
+        jl error
+        mov qword [connfd], rax
+
         write STDOUT, ok_msg, ok_msg.size
 
-        ; Close socket and exit
+        ; Close everything and exit
         close [sockfd]
+        close [connfd]
         exit EXIT_SUCCESS
 
 error:
         write STDERR, err_msg, err_msg.size  
 
-        ; Close socket and exit
+        ; Close everything and exit
         close [sockfd]
+        close [connfd]
         exit EXIT_FAILURE
