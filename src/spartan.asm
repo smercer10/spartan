@@ -9,6 +9,8 @@ EXIT_FAILURE equ 1
 AF_INET equ 2
 SOCK_STREAM equ 1
 IPPROTO_IP equ 0
+IPPROTO_TCP equ 6
+TCP_NODELAY equ 1
 INADDR_ANY equ 0
 
 ; These can be changed
@@ -28,6 +30,12 @@ main:
         cmp rax, 0
         jl error
         mov qword [sockfd], rax
+
+        ; Enable TCP_NODELAY
+        write STDOUT, setsockopt_log, setsockopt_log.size
+        setsockopt [sockfd], IPPROTO_TCP, TCP_NODELAY, opt_enable, opt_enable.size
+        cmp rax, 0
+        jl error
 
         ; Bind address to socket
         write STDOUT, bind_log, bind_log.size
