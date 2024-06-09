@@ -2,6 +2,7 @@ INFO equ "INFO: "
 ERR equ "ERROR: "
 
 NL equ 10
+CR equ 13
 
 struc sockaddr_in
 {
@@ -28,11 +29,19 @@ segment readable writeable
         cltaddr sockaddr_in
         cltaddrlen dd 0 ; Writeable address
 
-        init_msg db INFO, "Starting server", NL
-        ok_msg db INFO, "Everything was ok", NL
-        err_msg db ERR, "Something went wrong", NL
+        init_log db INFO, "Starting server", NL
+        response_log db INFO, "Responded to client", NL
+        err_log db ERR, "Something went wrong", NL
 
-        socket_msg db INFO, "Creating socket", NL
-        bind_msg db INFO, "Binding socket", NL
-        listen_msg db INFO, "Marking socket as passive", NL
-        accept_msg db INFO, "Waiting for connection", NL
+        socket_log db INFO, "Creating socket", NL
+        bind_log db INFO, "Binding socket", NL
+        listen_log db INFO, "Listening to socket", NL
+        accept_log db INFO, "Waiting for connections", NL
+
+        http_response db "HTTP/1.1 200 OK", CR, NL, \
+                         "Content-Type: text/html", CR, NL, \
+                         "Content-Length: 27", CR, NL, \
+                         "Connection: close", CR, NL, \
+                         CR, NL, \
+                         "<h1>Hello from Spartan!<h1>"
+        http_response_size = $ - http_response

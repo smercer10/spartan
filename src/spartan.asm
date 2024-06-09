@@ -20,17 +20,17 @@ include 'data.inc'
 
 segment executable
 main:
-        write STDOUT, init_msg, init_msg.size
+        write STDOUT, init_log, init_log.size
 
         ; Create socket
-        write STDOUT, socket_msg, socket_msg.size
+        write STDOUT, socket_log, socket_log.size
         socket AF_INET, SOCK_STREAM, IPPROTO_IP
         cmp rax, 0
         jl error
         mov qword [sockfd], rax
 
         ; Bind address to socket
-        write STDOUT, bind_msg, bind_msg.size
+        write STDOUT, bind_log, bind_log.size
         mov word [svraddr.sin_family], AF_INET
         mov word [svraddr.sin_port], PORT
         mov dword [svraddr.sin_addr], INADDR_ANY
@@ -38,20 +38,25 @@ main:
         cmp rax, 0
         jl error
 
-        ; Mark socket as passive
-        write STDOUT, listen_msg, listen_msg.size
+        ; Listen to socket
+        write STDOUT, listen_log, listen_log.size
         listen [sockfd], MAX_CONN
         cmp rax, 0
         jl error
 
+handle_conn:
         ; Wait for client connection
-        write STDOUT, accept_msg, accept_msg.size
+        write STDOUT, accept_log, accept_log.size
         accept [sockfd], cltaddr, cltaddrlen
         cmp rax, 0
         jl error
         mov qword [connfd], rax
 
-        write STDOUT, ok_msg, ok_msg.size
+        ; Respond to client
+        write [connfd], http_response, http_response_size
+        write STDOUT, response_log, response_log.size
+
+        jmp handle_conn
 
         ; Close everything and exit
         close [sockfd]
@@ -59,7 +64,7 @@ main:
         exit EXIT_SUCCESS
 
 error:
-        write STDERR, err_msg, err_msg.size  
+        write STDERR, err_log, err_log.size
 
         ; Close everything and exit
         close [sockfd]
