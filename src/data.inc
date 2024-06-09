@@ -21,10 +21,13 @@ struc sockaddr_in
 
 segment readable writeable
         sockfd dq 0
-        servaddr sockaddr_in
+        svraddr sockaddr_in
+        cltaddr sockaddr_in
 
-        start_msg db INFO, "Starting web server!", NL
+        init_msg db INFO, "Starting server!", NL
+        ok_msg db INFO, "Everything was ok!", NL
+        err_msg db ERR, "Something went wrong!", NL
+
         sock_create_msg db INFO, "Creating socket...", NL
         sock_bind_msg db INFO, "Binding socket...", NL
-        done_msg db INFO, "Done.", NL
-        err_msg db ERR, "Something went wrong.", NL
+        sock_listen_msg db INFO, "Listening for connections...", NL
