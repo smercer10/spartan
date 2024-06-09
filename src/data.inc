@@ -45,6 +45,7 @@ segment readable writeable
         listen_log db INFO, "Listening to socket", NL
         accept_log db INFO, "Waiting for connections", NL
         response_log db INFO, "Client served", NL
+        exit_log db INFO, "Exiting gracefully"
         err_log db ERR, "Something went wrong", NL
 
         http_response db "HTTP/1.1 200 OK", CR, NL, \

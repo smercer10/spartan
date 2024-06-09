@@ -20,6 +20,19 @@ MAX_CONN equ 10
 include 'syscalls.inc'
 include 'data.inc'
 
+macro check_return
+{
+        cmp rax, 0
+        jl error
+}
+
+macro cleanup
+{
+        write STDOUT, exit_log, exit_log.size
+        close [sockfd]
+        close [connfd]
+}
+
 segment executable
 main:
         write STDOUT, init_log, init_log.size
@@ -27,15 +40,13 @@ main:
         ; Create socket
         write STDOUT, socket_log, socket_log.size
         socket AF_INET, SOCK_STREAM, IPPROTO_IP
-        cmp rax, 0
-        jl error
+        check_return
         mov qword [sockfd], rax
 
         ; Enable TCP_NODELAY
         write STDOUT, setsockopt_log, setsockopt_log.size
         setsockopt [sockfd], IPPROTO_TCP, TCP_NODELAY, opt_enable, opt_enable.size
-        cmp rax, 0
-        jl error
+        check_return
 
         ; Bind address to socket
         write STDOUT, bind_log, bind_log.size
@@ -43,38 +54,33 @@ main:
         mov word [svraddr.sin_port], PORT
         mov dword [svraddr.sin_addr], INADDR_ANY
         bind [sockfd], svraddr, svraddrlen
-        cmp rax, 0
-        jl error
+        check_return
 
         ; Listen to socket
         write STDOUT, listen_log, listen_log.size
         listen [sockfd], MAX_CONN
-        cmp rax, 0
-        jl error
+        check_return
 
 handle_conn:
         ; Wait for client connection
         write STDOUT, accept_log, accept_log.size
         accept [sockfd], cltaddr, cltaddrlen
-        cmp rax, 0
-        jl error
+        check_return
         mov qword [connfd], rax
 
         ; Respond to client
         write [connfd], http_response, http_response_size
         write STDOUT, response_log, response_log.size
 
+        ; TODO: add way to jump to shutdown
+
         jmp handle_conn
 
-        ; Close everything and exit
-        close [sockfd]
-        close [connfd]
+shutdown:
+        cleanup
         exit EXIT_SUCCESS
 
 error:
         write STDERR, err_log, err_log.size
-
-        ; Close everything and exit
-        close [sockfd]
-        close [connfd]
+        cleanup
         exit EXIT_FAILURE
