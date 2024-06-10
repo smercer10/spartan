@@ -10,5 +10,5 @@ jobs:
       - uses: actions/checkout@v4
 
       - run: |
-        sudo apt install -y fasm
-        make
+          sudo apt install -y fasm
+          make
