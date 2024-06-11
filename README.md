@@ -1,6 +1,6 @@
 # Spartan
 
-Spartan is an ultra-lightweight FASM TCP server that utilizes pure Linux syscalls.
+Spartan is an ultra-lightweight FASM TCP server that utilises pure Linux syscalls.
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/smercer10/spartan/blob/main/LICENSE)
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/smercer10/spartan/build.yml?label=CI)](https://github.com/smercer10/spartan/actions/workflows/build.yml)
