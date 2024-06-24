@@ -29,6 +29,8 @@ nc localhost 1337
 
 The server will respond with a small HTTP packet. Since the socket has TCP_NODELAY enabled and responses aren't buffered, connecting via a browser will likely trigger multiple responses due to additional resource requests (e.g., a favicon).
 
+![image](https://github.com/smercer10/spartan/assets/130914459/0dc2f721-b733-409b-b7b0-4e50c4524ca3)
+
 ## Build Locally
 
 ### Prerequisites
