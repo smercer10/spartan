@@ -5,10 +5,10 @@ Spartan is an ultra-lightweight FASM TCP server that utilises pure Linux syscall
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/smercer10/spartan/blob/main/LICENSE)
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/smercer10/spartan/build.yml?label=CI)](https://github.com/smercer10/spartan/actions/workflows/build.yml)
 
-## Features
+## Key Features
 
 - ~1 kb static binary
-- <1 ms response times
+- Nagle-disabled packet transmission
 - Complete error handling and logging via the standard streams
 
 ## Usage
